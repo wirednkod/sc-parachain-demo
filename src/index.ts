@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import "regenerator-runtime/runtime"
-import { ScProvider, SupportedChains } from '@substrate/connect'
+import { createScClient, WellKnownChains } from "@substrate/connect"
 import { ApiPromise } from "@polkadot/api"
 import westmint from "./assets/westend-westmint.json"
 import UI, { emojis } from "./view"
@@ -15,8 +15,10 @@ window.onload = () => {
   ui.showSyncing()
   void (async () => {
     try {
-      const westendProvider = new ScProvider(SupportedChains.westend, JSON.stringify(westmint));
-      const api = await ApiPromise.create({ provider: westendProvider });
+      const scClient = createScClient()
+      await scClient.addWellKnownChain(WellKnownChains.westend2);
+      const westmintProvider = await scClient.addChain(JSON.stringify(westmint));
+      const api = await ApiPromise.create({ provider: westmintProvider });
       
       const [chain, nodeName, nodeVersion, properties] = await Promise.all([
         api.rpc.system.chain(),
