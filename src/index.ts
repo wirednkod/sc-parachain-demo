@@ -4,7 +4,10 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import "regenerator-runtime/runtime"
-import { ScProvider, SupportedChains } from '@substrate/connect'
+import {
+  ScProvider,
+  WellKnownChain,
+} from "@polkadot/rpc-provider/substrate-connect"
 import { ApiPromise } from "@polkadot/api"
 import westmint from "./assets/westend-westmint.json"
 import UI, { emojis } from "./view"
@@ -15,9 +18,12 @@ window.onload = () => {
   ui.showSyncing()
   void (async () => {
     try {
-      const westendProvider = new ScProvider(SupportedChains.westend, JSON.stringify(westmint));
-      const api = await ApiPromise.create({ provider: westendProvider });
-      
+
+      const westendProvider = new ScProvider(WellKnownChain.westend2)
+      const provider = new ScProvider(JSON.stringify(westmint), westendProvider)
+      await provider.connect()
+      const api = await ApiPromise.create({ provider })
+
       const [chain, nodeName, nodeVersion, properties] = await Promise.all([
         api.rpc.system.chain(),
         api.rpc.system.name(),
@@ -72,7 +78,6 @@ window.onload = () => {
       ui.log(`${emojis.newspaper} Receiving first 10 tokens:`)
       for (let i = 0; i <= 9; i++) {
         await api.query.assets.asset(i).then((asset) => {
-          if (asset.isNone) return
           ui.log(`${emojis.banknote} ------------------- Asset No.${i + 1}:`)
           const { owner, issuer, admin, supply, isFrozen } = JSON.parse(
             asset as unknown as string,
