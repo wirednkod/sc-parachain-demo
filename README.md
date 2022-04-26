@@ -2,6 +2,7 @@
 
 This is a Substrate Connect Parachain demo that connects through SmoldotProvider or Extension Provider (more info [here](https://github.com/paritytech/substrate-connect) or [here](https://paritytech.github.io/substrate-connect/)) to Parachain `Westmint` using `Westend` chain retrieves (and shows) info from the Parachain.
 
+### Demo: https://wirednkod.github.io/sc-parachain-demo/
 ## Getting Started
 
 1. Clone the whole repository.
