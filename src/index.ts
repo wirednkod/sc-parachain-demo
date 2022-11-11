@@ -21,7 +21,7 @@ window.onload = () => {
 
       const westendProvider = new ScProvider(WellKnownChain.westend2)
       const provider = new ScProvider(JSON.stringify(westmint), westendProvider)
-      await provider.connect()
+      await provider.connect({ embeddedNodeConfig: { maxLogLevel: 4 } })
       const api = await ApiPromise.create({ provider })
 
       const [chain, nodeName, nodeVersion, properties] = await Promise.all([
